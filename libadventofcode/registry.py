@@ -5,7 +5,7 @@ class SolverAlreadyExists(Exception):
 
 
 
-class SolversRegistry(object):
+class SolversRegistry:
     def __init__(self):
         self._solvers = {}
 

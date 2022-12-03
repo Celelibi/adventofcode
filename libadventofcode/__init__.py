@@ -14,7 +14,7 @@ class TryAgain(Exception):
 
 
 
-class AdventOfCode(object):
+class AdventOfCode:
     def __init__(self, session, year=None):
         self._year = year
         if self._year is None:

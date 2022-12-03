@@ -2,7 +2,7 @@ import abc
 
 
 
-class Solver(object, metaclass=abc.ABCMeta):
+class Solver(metaclass=abc.ABCMeta):
     def __init__(self):
         self.solution = None
 
