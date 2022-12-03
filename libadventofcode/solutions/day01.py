@@ -16,4 +16,4 @@ class Solver(base.Solver):
 
 
 
-registry.register("1", Solver())
+registry.register(str(int(__name__[-2:])), Solver())
