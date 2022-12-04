@@ -2,13 +2,14 @@ import logging
 import os
 import re
 import requests
+import sys
 import time
 
 from . import registry
 
 
 
-input_cache_dir = ".inputs"
+input_cache_dir = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), ".inputs")
 
 
 
