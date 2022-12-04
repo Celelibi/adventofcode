@@ -3,15 +3,22 @@
 import argparse
 import locale
 import logging
+import logging.config
+import os
+import sys
 
 import libadventofcode
 import solutions
 
 
+
+SELFPATH = os.path.dirname(os.path.realpath(sys.argv[0]))
+
+
+
 def main():
     locale.setlocale(locale.LC_ALL, '')
-    logfmt = "%(asctime)s %(levelname)s: %(message)s"
-    logging.basicConfig(format=logfmt, level=logging.WARNING)
+    logging.config.fileConfig(os.path.join(SELFPATH, "logconf.ini"))
 
     parser = argparse.ArgumentParser(description="Bot de validation AdventOfCode")
     parser.add_argument("session", metavar="COOKIE", help="Cookie de session à utiliser")
