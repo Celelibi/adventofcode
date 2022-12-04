@@ -1,10 +1,15 @@
 import logging
+import os
 import re
 import requests
 import time
 
 from . import registry
 from . import solutions
+
+
+
+input_cache_dir = ".inputs"
 
 
 
@@ -35,6 +40,29 @@ class AdventOfCode:
         res = self._sess.get("https://adventofcode.com/%s/day/%s/input" % (self._year, chall))
         res.raise_for_status()
         return res.text
+
+
+
+    def get_input(self, chall):
+        fullpath = os.path.join(os.getcwd(), input_cache_dir)
+        logging.debug("Checking if input cache directory exists at: %s", fullpath)
+        if not os.path.exists(input_cache_dir):
+            logging.info("Input cache directory doesn't exist, creating it")
+            os.mkdir(input_cache_dir)
+
+        cache_file = os.path.join(input_cache_dir, "input_%02d.txt" % int(chall))
+        logging.debug("Checking for the existence of cached input file: %s", cache_file)
+        if os.path.exists(cache_file):
+            logging.info("Reading input from file: %s", cache_file)
+            with open(cache_file) as fp:
+                return fp.read()
+
+        data = self.download(chall)
+        logging.info("Saving input data to cache file: %s", cache_file)
+        with open(cache_file, "w") as fp:
+            fp.write(data)
+
+        return data
 
 
 
@@ -90,7 +118,7 @@ class AdventOfCode:
     def solve_day(self, day):
         solver = registry.solver(day)
 
-        data = self.download(day)
+        data = self.get_input(day)
 
         logging.info("Solving challenge %s level 1", day)
         solution1 = solver.solve1(data)
@@ -109,7 +137,7 @@ class AdventOfCode:
         challs = self.list()
         data = {}
         for n in challs:
-            data[n] = self.download(n)
+            data[n] = self.get_input(n)
 
         solutions1 = {}
         for n in challs:
