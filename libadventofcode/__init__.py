@@ -5,7 +5,6 @@ import requests
 import time
 
 from . import registry
-from . import solutions
 
 
 

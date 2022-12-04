@@ -1,5 +1,5 @@
-from . import base
-from .. import registry
+from libadventofcode import base
+from libadventofcode import registry
 
 
 

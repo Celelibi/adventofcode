@@ -5,6 +5,7 @@ import locale
 import logging
 
 import libadventofcode
+import solutions
 
 
 def main():

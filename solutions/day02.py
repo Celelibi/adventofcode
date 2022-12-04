@@ -1,7 +1,7 @@
 import numpy as np
 
-from . import base
-from .. import registry
+from libadventofcode import base
+from libadventofcode import registry
 
 
 
