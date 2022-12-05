@@ -25,6 +25,7 @@ def main():
     parser.add_argument("--list", "-l", action="store_true", help="List solvable challenges")
     parser.add_argument("--all", "-a", action="store_true", help="Solve all challenges")
     parser.add_argument("--day", "-d", help="Solve the given day challenge")
+    parser.add_argument("--year", "-y", help="Solve the challenges of a given year (default, now)")
     parser.add_argument("--verbose", "-v", action="count", help="Augmente le niveau de verbosité")
 
     args = parser.parse_args()
@@ -33,6 +34,7 @@ def main():
     listchall = args.list
     solveall = args.all
     solveday = args.day
+    solveyear = args.year
     verbose = args.verbose
 
     if verbose is not None:
@@ -45,7 +47,7 @@ def main():
         print("--all and --day are mutually exclusive")
         return
 
-    aoc = libadventofcode.AdventOfCode(session)
+    aoc = libadventofcode.AdventOfCode(session, solveyear)
 
     if listchall:
         print("Known challenge solvers:")
