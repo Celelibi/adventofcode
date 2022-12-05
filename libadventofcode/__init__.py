@@ -9,7 +9,7 @@ from . import registry
 
 
 
-input_cache_dir = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), ".inputs")
+input_cache_dir_base = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), ".inputs")
 
 
 
@@ -25,6 +25,7 @@ class AdventOfCode:
         if self._year is None:
             self._year = time.strftime("%Y")
 
+        self._input_cache_dir = os.path.join(input_cache_dir_base, self._year)
         self._sess = requests.Session()
         self._sess.cookies["session"] = session
 
@@ -49,13 +50,11 @@ class AdventOfCode:
 
 
     def get_input(self, chall):
-        fullpath = os.path.join(os.getcwd(), input_cache_dir)
-        logging.debug("Checking if input cache directory exists at: %s", fullpath)
-        if not os.path.exists(input_cache_dir):
-            logging.info("Input cache directory doesn't exist, creating it")
-            os.mkdir(input_cache_dir)
+        fullpath = os.path.join(os.getcwd(), self._input_cache_dir)
+        logging.debug("Creating cache directory %s if necessary", fullpath)
+        os.makedirs(self._input_cache_dir, exist_ok=True)
 
-        cache_file = os.path.join(input_cache_dir, "input_%02d.txt" % int(chall))
+        cache_file = os.path.join(self._input_cache_dir, "input_%02d.txt" % int(chall))
         logging.debug("Checking for the existence of cached input file: %s", cache_file)
         if os.path.exists(cache_file):
             logging.info("Reading input from file: %s", cache_file)
