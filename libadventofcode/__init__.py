@@ -159,12 +159,12 @@ class AdventOfCode:
 
         solutions1 = {}
         for n in challs:
-            logging.info("Solving challenge %s", n)
+            logging.info("Solving challenge %s level 1", n)
             solutions1[n] = registry.solver(n).solve1(data[n])
 
         solutions2 = {}
         for n in challs:
-            logging.info("Solving challenge %s", n)
+            logging.info("Solving challenge %s level 2", n)
             solutions2[n] = registry.solver(n).solve2(data[n])
 
         for n in challs:
