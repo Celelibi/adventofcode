@@ -50,8 +50,7 @@ def main():
     if listchall:
         print("Known challenge solvers:")
         for c in aoc.list():
-            print(c)
-        print("")
+            print("%s/%s" % c)
 
     if solveall:
         aoc.solve_all()

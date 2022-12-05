@@ -30,8 +30,13 @@ class AdventOfCode:
 
 
 
-    def list(self):
-        return registry.solvers()
+    def list(self, this_year_only=False):
+        solvers = []
+        for y, s in registry.solvers():
+            if not this_year_only or self._year == y:
+                solvers.append((y, s))
+
+        return solvers
 
 
 
@@ -134,7 +139,7 @@ class AdventOfCode:
 
 
     def solve_day(self, day):
-        solver = registry.solver(day)
+        solver = registry.solver((self._year, day))
 
         data = self.get_input(day)
 
@@ -152,10 +157,10 @@ class AdventOfCode:
 
 
     def solve_all(self):
-        challs = self.list()
+        challs = self.list(True)
         data = {}
         for n in challs:
-            data[n] = self.get_input(n)
+            data[n] = self.get_input(n[1])
 
         solutions1 = {}
         for n in challs:
@@ -169,8 +174,8 @@ class AdventOfCode:
 
         for n in challs:
             if solutions1[n] is not None:
-                self.submit(n, solutions1[n], 1)
+                self.submit(n[1], solutions1[n], 1)
 
         for n in challs:
             if solutions2[n] is not None:
-                self.submit(n, solutions2[n], 2)
+                self.submit(n[1], solutions2[n], 2)
