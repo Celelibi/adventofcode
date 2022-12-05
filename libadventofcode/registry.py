@@ -11,13 +11,13 @@ class SolversRegistry:
 
     def register(self, challid, solver):
         if challid in self._solvers:
-            raise SolverAlreadyExists("Multiple solvers for challenge id %s" % challid)
+            raise SolverAlreadyExists("Multiple solvers for challenge id %r" % (challid,))
 
         self._solvers[challid] = solver
 
     def solver(self, challid):
         if challid not in self._solvers:
-            raise NoSuchSolver("No solver for challenge %s" % challid)
+            raise NoSuchSolver("No solver for challenge %r" % (challid,))
 
         return self._solvers[challid]
 
