@@ -83,7 +83,7 @@ class AdventOfCode:
             return
 
         if "That's not the right answer" in res.text:
-            logging.info("Wrong solution to challenge %s, level %d.", chall, level)
+            logging.error("Wrong solution to challenge %s, level %d.", chall, level)
             return
 
         if "You gave an answer too recently" in res.text:
