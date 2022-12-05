@@ -58,12 +58,12 @@ class AdventOfCode:
         logging.debug("Checking for the existence of cached input file: %s", cache_file)
         if os.path.exists(cache_file):
             logging.info("Reading input from file: %s", cache_file)
-            with open(cache_file) as fp:
+            with open(cache_file, encoding="utf-8") as fp:
                 return fp.read()
 
         data = self.download(chall)
         logging.info("Saving input data to cache file: %s", cache_file)
-        with open(cache_file, "w") as fp:
+        with open(cache_file, "w", encoding="utf-8") as fp:
             fp.write(data)
 
         return data
