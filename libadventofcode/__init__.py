@@ -66,7 +66,20 @@ class AdventOfCode:
 
 
 
+    def get_already_done_solution(self, chall, level):
+        url = "https://adventofcode.com/%s/day/%s" % (self._year, chall)
+
+        logging.info("Retrieving solution of the validated challenge %s, level %d", chall, level)
+        res = self._sess.get(url)
+        res.raise_for_status()
+
+        solutions = re.findall(r'Your puzzle answer was <code>([^<]*)</code>', res.text)
+        return solutions[level - 1]
+
+
+
     def submit_once(self, chall, solution, level):
+        solution = str(solution)
         url = "https://adventofcode.com/%s/day/%s/answer" % (self._year, chall)
         data = {"level": level, "answer": solution}
 
@@ -76,6 +89,11 @@ class AdventOfCode:
 
         if "Did you already complete it?" in res.text:
             logging.info("Challenge %s, level %d already done.", chall, level)
+            actual_solution = self.get_already_done_solution(chall, level)
+            if solution == actual_solution:
+                logging.info("%s is the correct solution", solution)
+            else:
+                logging.error("%s is incorrect, should be %s", solution, actual_solution)
             return
 
         if "That's the right answer!" in res.text:
