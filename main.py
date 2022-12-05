@@ -8,7 +8,7 @@ import os
 import sys
 
 import libadventofcode
-import solutions
+import solutions # pylint: disable=unused-import
 
 
 
