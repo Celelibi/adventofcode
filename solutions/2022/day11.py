@@ -20,9 +20,10 @@ class Solver(base.Solver):
             m = r.match(rule).groupdict()
             m["items"] = [int(i) for i in m["items"].split(", ")]
             m.update({k: int(m[k]) for k in ("div", "iftrue", "iffalse")})
+            m["op"] = compile(m["op"], "<monkey %d operation %s>" % (len(monkeys), m["op"]), "eval")
             monkeys.append(m)
 
-        proddiv = math.prod([m["div"] for m in monkeys])
+        modulus = math.lcm(*(m["div"] for m in monkeys))
 
         business = [0] * len(monkeys)
 
@@ -31,7 +32,7 @@ class Solver(base.Solver):
                 business[i] += len(m["items"])
 
                 for item in m["items"]:
-                    new = eval(m["op"], {"old": item}) // relief % proddiv
+                    new = eval(m["op"], {"old": item}) // relief % modulus
                     if new % m["div"] == 0:
                         monkeys[m["iftrue"]]["items"].append(new)
                     else:
