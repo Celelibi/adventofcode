@@ -20,6 +20,43 @@ class TryAgain(Exception):
 
 
 
+class Timer:
+    def __init__(self, prefix="time", fmt="%f seconds", logger="Timer", loglevel=logging.DEBUG, autoprint=True):
+        if not isinstance(logger, logging.Logger):
+            logger = logging.getLogger(logger)
+
+        if prefix is None:
+            self._fmt = fmt
+        else:
+            self._fmt = prefix + ": " + fmt
+
+        self._logger = logger
+        self._loglevel = loglevel
+        self._autoprint = autoprint
+
+        self._elapsed = 0
+        self._stattime = None
+        self.start()
+
+    def start(self):
+        self._stattime = time.perf_counter()
+
+    def stop(self):
+        self._elapsed = time.perf_counter() - self._stattime
+        if self._autoprint:
+            self.print()
+
+    def print(self):
+        self._logger.log(self._loglevel, self._fmt, self._elapsed)
+
+    def __enter__(self):
+        self.start()
+
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.stop()
+
+
+
 class AdventOfCode:
     def __init__(self, session, year=None):
         self._year = year
@@ -144,10 +181,12 @@ class AdventOfCode:
         data = self.get_input(day)
 
         logging.info("Solving challenge %s level 1", day)
-        solution1 = solver.solve1(data)
+        with Timer():
+            solution1 = solver.solve1(data)
 
         logging.info("Solving challenge %s level 2", day)
-        solution2 = solver.solve2(data)
+        with Timer():
+            solution2 = solver.solve2(data)
 
         if solution1 is not None:
             self.submit(day, solution1, 1)
@@ -165,12 +204,14 @@ class AdventOfCode:
         solutions1 = {}
         for n in challs:
             logging.info("Solving challenge %s level 1", n)
-            solutions1[n] = registry.solver(n).solve1(data[n])
+            with Timer():
+                solutions1[n] = registry.solver(n).solve1(data[n])
 
         solutions2 = {}
         for n in challs:
             logging.info("Solving challenge %s level 2", n)
-            solutions2[n] = registry.solver(n).solve2(data[n])
+            with Timer():
+                solutions2[n] = registry.solver(n).solve2(data[n])
 
         for n in challs:
             if solutions1[n] is not None:
