@@ -18,6 +18,8 @@ class TryAgain(Exception):
     def __init__(self, t):
         self.time = t
 
+class NotSolvedError(Exception):
+    pass
 
 
 class Timer:
@@ -117,12 +119,14 @@ class AdventOfCode:
         res.raise_for_status()
 
         solutions = re.findall(r'Your puzzle answer was <code>([^<]*)</code>', res.text)
+        if len(solutions) < level:
+            raise NotSolvedError(f"Level {level} not solved yet")
+
         return solutions[level - 1]
 
 
 
     def submit_once(self, chall, solution, level):
-        solution = str(solution)
         url = "https://adventofcode.com/%s/day/%s/answer" % (self._year, chall)
         data = {"level": level, "answer": solution}
 
@@ -165,8 +169,21 @@ class AdventOfCode:
 
 
     def submit(self, chall, solution, level):
+        solution = str(solution)
+
         if not self._submit:
             logging.info("Not sending solution %s for challenge %s.%d", solution, chall, level)
+            try:
+                actual_solution = self.get_already_done_solution(chall, level)
+            except NotSolvedError:
+                logging.debug("Challenge %s.%d wasn't solved", chall, level)
+                return
+
+            if solution == actual_solution:
+                logging.info("%s is the correct", solution)
+            else:
+                logging.error("%s is wrong, should be %s", solution, actual_solution)
+
             return
 
         while True:
