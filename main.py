@@ -27,6 +27,7 @@ def main():
     parser.add_argument("--level", "-p", help="Solve only the given level")
     parser.add_argument("--day", "-d", help="Solve the given day challenge")
     parser.add_argument("--year", "-y", help="Solve the challenges of a given year (default, now)")
+    parser.add_argument("--no-submit", "-n", action="store_true", help="Do NOT submit the solutions")
     parser.add_argument("--verbose", "-v", action="count", help="Augmente le niveau de verbosité")
 
     args = parser.parse_args()
@@ -37,6 +38,7 @@ def main():
     solvelvl = args.level
     solveday = args.day
     solveyear = args.year
+    submit = not args.no_submit
     verbose = args.verbose
 
     if verbose is not None:
@@ -65,7 +67,7 @@ def main():
     else:
         solvelvl = int(solvelvl)
 
-    aoc = libadventofcode.AdventOfCode(session, solveyear)
+    aoc = libadventofcode.AdventOfCode(session, solveyear, submit)
 
     if listchall:
         print("Known challenge solvers:")

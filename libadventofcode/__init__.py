@@ -58,7 +58,7 @@ class Timer:
 
 
 class AdventOfCode:
-    def __init__(self, session, year=None):
+    def __init__(self, session, year=None, submit=True):
         self._year = year
         if self._year is None:
             self._year = time.strftime("%Y")
@@ -66,6 +66,7 @@ class AdventOfCode:
         self._input_cache_dir = os.path.join(input_cache_dir_base, self._year)
         self._sess = requests.Session()
         self._sess.cookies["session"] = session
+        self._submit = submit
 
 
 
@@ -164,6 +165,10 @@ class AdventOfCode:
 
 
     def submit(self, chall, solution, level):
+        if not self._submit:
+            logging.info("Not sending solution %s for challenge %s.%d", solution, chall, level)
+            return
+
         while True:
             try:
                 self.submit_once(chall, solution, level)
