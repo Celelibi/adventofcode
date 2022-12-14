@@ -24,6 +24,7 @@ def main():
     parser.add_argument("session", metavar="COOKIE", help="Cookie de session à utiliser")
     parser.add_argument("--list", "-l", action="store_true", help="List solvable challenges")
     parser.add_argument("--all", "-a", action="store_true", help="Solve all challenges")
+    parser.add_argument("--level", "-p", help="Solve only the given level")
     parser.add_argument("--day", "-d", help="Solve the given day challenge")
     parser.add_argument("--year", "-y", help="Solve the challenges of a given year (default, now)")
     parser.add_argument("--verbose", "-v", action="count", help="Augmente le niveau de verbosité")
@@ -33,6 +34,7 @@ def main():
     session = args.session
     listchall = args.list
     solveall = args.all
+    solvelvl = args.level
     solveday = args.day
     solveyear = args.year
     verbose = args.verbose
@@ -47,6 +49,22 @@ def main():
         print("--all and --day are mutually exclusive")
         return
 
+    if solvelvl not in (None, "all", "1", "2"):
+        print("--level argument must be one of \"all\", \"1\" or \"2\"")
+        return
+
+    if solveday is not None and "." in solveday and solvelvl is not None:
+        print("--day with dot notation and --level are mutually exclusive")
+        return
+
+    if solveday is not None and "." in solveday:
+        solveday, solvelvl = solveday.split(".")
+
+    if solvelvl in (None, "all"):
+        solvelvl = None
+    else:
+        solvelvl = int(solvelvl)
+
     aoc = libadventofcode.AdventOfCode(session, solveyear)
 
     if listchall:
@@ -55,10 +73,10 @@ def main():
             print("%s/%s" % c)
 
     if solveall:
-        aoc.solve_all()
+        aoc.solve_all(solvelvl)
 
     if solveday is not None:
-        aoc.solve_day(solveday)
+        aoc.solve_day(solveday, solvelvl)
 
 
 

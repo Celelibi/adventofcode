@@ -175,18 +175,25 @@ class AdventOfCode:
 
 
 
-    def solve_day(self, day):
+    def solve_day(self, day, level=None):
+        if level not in (None, 1, 2):
+            raise ValueError("level must be None, 1 or 2")
+
         solver = registry.solver((self._year, day))
 
         data = self.get_input(day)
 
-        logging.info("Solving challenge %s level 1", day)
-        with Timer():
-            solution1 = solver.solve1(data)
+        solution1 = solution2 = None
 
-        logging.info("Solving challenge %s level 2", day)
-        with Timer():
-            solution2 = solver.solve2(data)
+        if level is None or level == 1:
+            logging.info("Solving challenge %s level 1", day)
+            with Timer():
+                solution1 = solver.solve1(data)
+
+        if level is None or level == 2:
+            logging.info("Solving challenge %s level 2", day)
+            with Timer():
+                solution2 = solver.solve2(data)
 
         if solution1 is not None:
             self.submit(day, solution1, 1)
@@ -195,28 +202,33 @@ class AdventOfCode:
 
 
 
-    def solve_all(self):
+    def solve_all(self, level=None):
+        if level not in (None, 1, 2):
+            raise ValueError("level must be None, 1 or 2")
+
         challs = self.list(True)
         data = {}
         for n in challs:
             data[n] = self.get_input(n[1])
 
         solutions1 = {}
-        for n in challs:
-            logging.info("Solving challenge %s/%s level 1", *n)
-            with Timer():
-                solutions1[n] = registry.solver(n).solve1(data[n])
+        if level is None or level == 1:
+            for n in challs:
+                logging.info("Solving challenge %s/%s level 1", *n)
+                with Timer():
+                    solutions1[n] = registry.solver(n).solve1(data[n])
 
         solutions2 = {}
-        for n in challs:
-            logging.info("Solving challenge %s/%s level 2", *n)
-            with Timer():
-                solutions2[n] = registry.solver(n).solve2(data[n])
+        if level is None or level == 2:
+            for n in challs:
+                logging.info("Solving challenge %s/%s level 2", *n)
+                with Timer():
+                    solutions2[n] = registry.solver(n).solve2(data[n])
 
         for n in challs:
-            if solutions1[n] is not None:
+            if n in solutions1 and solutions1[n] is not None:
                 self.submit(n[1], solutions1[n], 1)
 
         for n in challs:
-            if solutions2[n] is not None:
+            if n in solutions2 and solutions2[n] is not None:
                 self.submit(n[1], solutions2[n], 2)
