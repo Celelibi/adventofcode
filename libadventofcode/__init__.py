@@ -180,13 +180,14 @@ class AdventOfCode:
 
 
 
-    def solve_day(self, day, level=None):
+    def solve_day(self, day, data=None, level=None):
         if level not in (None, 1, 2):
             raise ValueError("level must be None, 1 or 2")
 
         solver = registry.solver((self._year, day))
 
-        data = self.get_input(day)
+        if data is None:
+            data = self.get_input(day)
 
         solution1 = solution2 = None
 

@@ -28,6 +28,7 @@ def main():
     parser.add_argument("--day", "-d", help="Solve the given day challenge")
     parser.add_argument("--year", "-y", help="Solve the challenges of a given year (default, now)")
     parser.add_argument("--no-submit", "-n", action="store_true", help="Do NOT submit the solutions")
+    parser.add_argument("--input", "-i", help="Input file to use (imply --no-submit)")
     parser.add_argument("--verbose", "-v", action="count", help="Augmente le niveau de verbosité")
 
     args = parser.parse_args()
@@ -39,6 +40,7 @@ def main():
     solveday = args.day
     solveyear = args.year
     submit = not args.no_submit
+    inputfile = args.input
     verbose = args.verbose
 
     if verbose is not None:
@@ -49,6 +51,10 @@ def main():
 
     if solveall and solveday is not None:
         print("--all and --day are mutually exclusive")
+        return
+
+    if solveall and inputfile is not None:
+        print("--all and --input are mutually exclusive")
         return
 
     if solvelvl not in (None, "all", "1", "2"):
@@ -67,6 +73,16 @@ def main():
     else:
         solvelvl = int(solvelvl)
 
+    if inputfile is not None:
+        logging.debug("Disabling solution submission")
+        submit = False
+
+        logging.debug("Reading input data from %s", inputfile)
+        with open(inputfile, encoding="utf-8") as fp:
+            data = fp.read()
+    else:
+        data = None
+
     aoc = libadventofcode.AdventOfCode(session, solveyear, submit)
 
     if listchall:
@@ -78,7 +94,7 @@ def main():
         aoc.solve_all(solvelvl)
 
     if solveday is not None:
-        aoc.solve_day(solveday, solvelvl)
+        aoc.solve_day(solveday, data=data, level=solvelvl)
 
 
 
