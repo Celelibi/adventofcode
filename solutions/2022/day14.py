@@ -59,14 +59,19 @@ class Solver(base.Solver):
             ymin, ymax = sorted([ymin, ymax])
             sandbox[ymin:ymax + 1, xmin:xmax + 1] = 1
 
+        source = [500, 0] - sandbox_start
+        stack = [source] # List of coords we know the path of
         while True:
-            x, y = [500, 0] - sandbox_start
-            if sandbox[y, x]:
+            if sandbox[source[1], source[0]]:
                 return (sandbox == 2).sum()
 
+            x, y = stack.pop()
             while True:
-                while sandbox[y, x] == 0:
-                    y += 1
+                stack.append((x, y))
+
+                y += 1
+                if not sandbox[y, x]:
+                    continue
 
                 if not sandbox[y, x - 1]:
                     x -= 1
@@ -74,6 +79,7 @@ class Solver(base.Solver):
                     x += 1
                 else:
                     sandbox[y - 1, x] = 2
+                    stack.pop()
                     break
 
 
