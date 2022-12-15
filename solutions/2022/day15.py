@@ -49,7 +49,7 @@ class Solver(base.Solver):
         # range_from[y, s]..range_to[y, s] is the range of x values reached by sensor s on row y
         with Timer("ranges"):
             ranges_from = sensors[:, 0] - rem
-            ranges_to = sensors[:, 0] + rem + 1
+            ranges_to = sensors[:, 0] + 1 + rem
             np.clip(ranges_from, 0, bound, out=ranges_from)
             np.clip(ranges_to, 0, bound, out=ranges_to)
 
