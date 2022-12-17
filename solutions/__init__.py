@@ -3,7 +3,7 @@ import os
 
 solutions_path = os.path.dirname(os.path.relpath(__file__))
 
-for e in os.listdir(os.path.join(solutions_path, "..", "solutions")):
+for e in sorted(os.listdir(os.path.join(solutions_path, "..", "solutions"))):
     try:
         year = int(e)
     except ValueError:
